@@ -17,11 +17,14 @@
 git clone https://gitee.com/fantasy-hx/1999-plugin.git ./plugins/1999-plugin
 ```
 ## <div align="center">依赖</div> 
-
+ 
  **<div align="center">|如需安装依赖，在Yunzai根目录执行|</div>** 
  **<div align="center">|PS：当使用pnpm时，canvas可能会安装不上甚至卡死|</div>** 
 
 ```sh
+#如果发现安装失败，请先执行
+sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
+#正常使用npm或pnpm安装依赖即可
 cd plugins/1999-plugin && npm install
 ```
 ## <div align="center">更新</div>

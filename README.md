@@ -22,10 +22,10 @@ git clone https://gitee.com/fantasy-hx/1999-plugin.git ./plugins/1999-plugin
  **<div align="center">|PS：当使用pnpm时，canvas可能会安装不上甚至卡死|</div>** 
 
 ```sh
-#如果发现pnpm安装失败，请先执行
-sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
-#正常使用npm或pnpm安装依赖即可
+#正常使用npm安装依赖即可
 cd plugins/1999-plugin && npm install
+#如果发现pnpm安装失败，请在Yunzai根目录执行
+npm install canvas --canvas_binary_host_mirror=https://registry.npmmirror.com/-/binary/canvas
 ```
 ## <div align="center">更新</div>
 

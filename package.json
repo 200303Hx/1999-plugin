@@ -1,0 +1,21 @@
+{
+  "name": "1999-plugin",
+  "version": "1.0.0",
+  "description": "<div align=\"center\">Yunzai-Bot 插件</div>\r <div align=\"center\">点击链接加入群聊：https://qm.qq.com/q/DDjRYyFJXG",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "axios": "^1.5.1",
+    "jimp": "^0.22.10",
+    "lodash": "^4.17.21"
+  },
+  "dependencies": {
+    "canvas": "^2.11.2"
+  }
+}

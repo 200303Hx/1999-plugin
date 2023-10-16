@@ -26,7 +26,7 @@ cd plugins/1999-plugin && npm install
 ```
 ## <div align="center">更新</div>
 
- **<div align="center">|在Yunzai根目录执行或发送 /1999更新 |</div>** 
+ **<div align="center">|在Yunzai根目录执行或发送 #1999更新 |</div>** 
 
 ```sh
 cd plugins/1999-plugin && git pull

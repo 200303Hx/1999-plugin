@@ -4,7 +4,7 @@ import { update } from '../../other/update.js'
 import { command } from '../config/global/command.js'
 const Plugin_Name = '1999-plugin'
 
-export class 1999_update extends plugin {
+export class update extends plugin {
   constructor() {
     super({
       /** 功能名称 */

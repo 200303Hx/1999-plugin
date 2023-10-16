@@ -12,10 +12,11 @@
   "license": "ISC",
   "devDependencies": {
     "axios": "^1.5.1",
+    "canvas": "^2.11.2",
     "jimp": "^0.22.10",
     "lodash": "^4.17.21"
   },
   "dependencies": {
-    "canvas": "^2.11.2"
+    "node-schedule": "^2.1.1"
   }
 }

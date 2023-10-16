@@ -11,14 +11,14 @@
 
 ## <div align="center">安装</div> 
 
- **<div align="center">|使用Gitee安装，在Yunzai根目录执行|</div>** 
+ **<div align="center">|使用Gitee安装，在Yunzai根目录执行，直接安装不用装依赖|</div>** 
 
 ```sh
 git clone https://gitee.com/fantasy-hx/1999-plugin.git ./plugins/1999-plugin
 ```
 ## <div align="center">依赖</div> 
 
- **<div align="center">|安装依赖，在Yunzai根目录执行|</div>** 
+ **<div align="center">|如需安装依赖，在Yunzai根目录执行|</div>** 
  **<div align="center">|PS：当使用pnpm时，canvas可能会安装不上甚至卡死|</div>** 
 
 ```sh
@@ -26,7 +26,7 @@ cd plugins/1999-plugin && npm install
 ```
 ## <div align="center">更新</div>
 
- **<div align="center">|在Yunzai根目录执行或发送 #1999更新 |</div>** 
+ **<div align="center">|在Yunzai根目录执行或者使用云崽自带更新|</div>** 
 
 ```sh
 cd plugins/1999-plugin && git pull

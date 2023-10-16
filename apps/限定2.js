@@ -1,23 +1,45 @@
 import fs from 'fs'
 import jimp from 'jimp'
-
-export class up2 extends plugin {
+import schedule from 'node-schedule'
+export class up extends plugin {
   constructor () {
     super({
+      /** 功能名称 */
+      name: '限定',
+      /** 功能描述 */
+      dsc: '限定卡池',
+      event: 'message',
+      /** 优先级,数字越小等级越高 */
+      priority: 1,
       rule: [
         {
-          reg: /^\/十连up2$/,
-          fnc: '十连up2'
+          reg: /^\/十连up$/,
+          fnc: '十连up'
         },
         {
-          reg: /^\/单抽up2$/,
-          fnc: '单抽up2'
+          reg: /^\/单抽up$/,
+          fnc: '单抽up'
         }
       ]
     })
+    this.userUsageCount = this.loadUserUsageCount()
+    // 创建每天早上5点触发的定时任务
+    const rule = new schedule.RecurrenceRule()
+    rule.hour = 5
+    rule.minute = 0
+    const job = schedule.scheduleJob(rule, () => {
+      this.resetUserUsageCount() // 清空用户使用次数计数
+    })
   }
 
-  async 单抽up2 (e) {
+  async 单抽up (e) {
+    const userId = e.user_id
+
+    // 检查用户是否已经超过总次数限制
+    if (this.userUsageCount[userId] >= 100) {
+      e.reply('您已经超过了总次数限制。')
+      return
+    }
     try {
       const drawCountMap = loadDrawCountMap()
       const userId = e.user_id
@@ -25,7 +47,7 @@ export class up2 extends plugin {
       // 单抽的逻辑，包括随机选择和处理抽卡结果
       const { randomFolder, randomImage } = await 单抽Logic()
       const image = await jimp.read(randomImage)
-      const outputFilePath = `${outputFolderPath}/single_draw.jpg-up2`
+      const outputFilePath = `${outputFolderPath}/single_draw.jpg`
       await image.writeAsync(outputFilePath)
 
       // 添加抽到的文件名到抽卡次数映射中
@@ -41,25 +63,35 @@ export class up2 extends plugin {
 
         saveDrawCountMap(drawCountMap)
         await e.reply([segment.image(outputFilePath)], false, { recallMsg: 10 })
-        e.reply(
-          `当前卡池：仙子振翅入夜\n只是征集了${previousDrawCount} 次就抽到了六星角色辣！`, true, { recallMsg: 10 }
-        )
+        e.reply(`当前卡池：自由摇摆\n只是征集了${previousDrawCount} 次就抽到了六星角色辣！`, true, { recallMsg: 10 })
         console.log(`单抽图片已保存至 ${outputFilePath}`)
       } else {
         saveDrawCountMap(drawCountMap)
 
-        await e.reply([segment.image(outputFilePath)])
+        await e.reply([segment.image(outputFilePath)], { recallMsg: 10 })
         e.reply(
-          `当前卡池：仙子振翅入夜\n征集次数${drawCountMap[userId].length} 次。`, true, { recallMsg: 10 }
-        )
+          `当前卡池：自由摇摆\n征集次数：${drawCountMap[userId].length} 次。`, true
+          , { recallMsg: 10 })
         console.log(`单抽图片已保存至 ${outputFilePath}`)
       }
+      // 增加用户的计数器
+      this.userUsageCount[userId] = (this.userUsageCount[userId] || 0) + 1
+
+      // 保存用户使用次数计数到文件
+      this.saveUserUsageCount(this.userUsageCount)
     } catch (error) {
       console.error('发生错误：', error)
     }
   }
 
-  async 十连up2 (e) {
+  async 十连up (e) {
+    const userId = e.user_id
+
+    // 检查用户是否已经超过总次数限制
+    if (this.userUsageCount[userId] >= 100) {
+      e.reply('您已经超过了总次数限制。')
+      return
+    }
     const positions = [
       [160, 0],
       [310, 0],
@@ -111,7 +143,7 @@ export class up2 extends plugin {
       }
 
       // 保存合成后的图片
-      const outputFilePath = `${outputFolderPath}/十连up2.jpg`
+      const outputFilePath = `${outputFolderPath}/十连.jpg`
       e.reply([segment.image(
         `${process
           .cwd()
@@ -124,20 +156,49 @@ export class up2 extends plugin {
       await e.reply([segment.image(outputFilePath)], false, { recallMsg: 10 })
 
       if (folder6DrawCount > 0) {
-        e.reply(
-          `当前卡池：仙子振翅入夜\n只是征集了${folder6DrawCount} 次就抽到了六星角色辣！`, true, { recallMsg: 10 }
-        )
+        e.reply(`当前卡池：自由摇摆\n只是征集了${folder6DrawCount} 次就抽到了六星角色辣！`, true, { recallMsg: 10 })
       } else {
-        e.reply(
-          `当前卡池：仙子振翅入夜\n征集次数：${drawCountMap[userId].length} 次`, true, { recallMsg: 10 }
-        )
+        e.reply(`当前卡池：自由摇摆\n征集次数：${drawCountMap[userId].length} 次`, true, { recallMsg: 10 })
       }
+      // 增加用户的计数器
+      this.userUsageCount[userId] = (this.userUsageCount[userId] || 0) + 10
+
+      // 保存用户使用次数计数到文件
+      this.saveUserUsageCount(this.userUsageCount)
     } catch (error) {
       console.error('发生错误：', error)
     }
   }
-}
 
+  resetUserUsageCount () {
+    // 在每天早上5点触发的操作
+    // 清空用户使用次数计数
+    this.userUsageCount = {}
+    // 保存用户使用次数计数到文件
+    this.saveUserUsageCount(this.userUsageCount)
+  }
+
+  loadUserUsageCount () {
+    try {
+      const json = fs.readFileSync(countFilePath, 'utf-8')
+      return JSON.parse(json)
+    } catch (error) {
+      return {} // 如果文件不存在或解析错误，则返回一个空对象
+    }
+  }
+
+  saveUserUsageCount (userUsageCount) {
+    try {
+      const json = JSON.stringify(userUsageCount, null, 2)
+      fs.writeFileSync(countFilePath, json, 'utf-8')
+    } catch (error) {
+      console.error('保存用户使用次数计数文件失败:', error)
+    }
+  }
+}
+const countFilePath = `${process
+  .cwd()
+  .replace(/\\/g, '/')}/plugins/1999-plugin/db/模拟抽卡/count.json` // 加载用户使用次数计数
 function loadDrawCountMap () {
   try {
     const json = fs.readFileSync(dbFolderPath, 'utf-8')
@@ -162,13 +223,13 @@ async function 单抽Logic () {
     {
       folderPath: folderPaths[0],
       probability: 0.015,
-      specificImage: `${folderPaths[0]}/6-14.png`,
+      specificImage: `${folderPaths[0]}/6-6.png`,
       specificImageProbability: 0.5
     },
     {
       folderPath: folderPaths[1],
       probability: 0.085,
-      specificImage: `${folderPaths[1]}/5-15.png`,
+      specificImage: `${folderPaths[1]}/5-8.png`,
       specificImageProbability: 0.5
     },
     { folderPath: folderPaths[2], probability: 0.4 },
@@ -191,10 +252,10 @@ const backgroundImagePath = `${process
 const folderPaths = [
   `${process
     .cwd()
-    .replace(/\\/g, '/')}/plugins/1999-plugin/resources/assets/img/模拟抽卡/6-lim2`,
+    .replace(/\\/g, '/')}/plugins/1999-plugin/resources/assets/img/模拟抽卡/6-lim1`,
   `${process
     .cwd()
-    .replace(/\\/g, '/')}/plugins/1999-plugin/resources/assets/img/模拟抽卡/5-lim2`,
+    .replace(/\\/g, '/')}/plugins/1999-plugin/resources/assets/img/模拟抽卡/5-lim1`,
   `${process.cwd().replace(/\\/g, '/')}/plugins/1999-plugin/resources/assets/img/模拟抽卡/4`,
   `${process.cwd().replace(/\\/g, '/')}/plugins/1999-plugin/resources/assets/img/模拟抽卡/3`,
   `${process.cwd().replace(/\\/g, '/')}/plugins/1999-plugin/resources/assets/img/模拟抽卡/2`
@@ -205,10 +266,10 @@ const outputFolderPath = `${process
   .replace(/\\/g, '/')}/plugins/1999-plugin/resources/assets/img/模拟抽卡/im`
 const dbFolderPath = `${process
   .cwd()
-  .replace(/\\/g, '/')}/plugins/1999-plugin/db/模拟抽卡/drawCountMap-lim2.json`
+  .replace(/\\/g, '/')}/plugins/1999-plugin/db/模拟抽卡/drawCountMap-lim1.json`
 const drawCountMapPath = `${process
   .cwd()
-  .replace(/\\/g, '/')}/plugins/1999-plugin/db/模拟抽卡/drawCountMap-lim2.json`
+  .replace(/\\/g, '/')}/plugins/1999-plugin/db/模拟抽卡/drawCountMap-lim1.json`
 // 背景图的宽度和高度
 const backgroundImageWidth = 1500
 const backgroundImageHeight = 800

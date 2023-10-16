@@ -1,5 +1,6 @@
 import fs from 'fs'
 import jimp from 'jimp'
+import schedule from 'node-schedule'
 export class up extends plugin {
   constructor () {
     super({
@@ -21,9 +22,24 @@ export class up extends plugin {
         }
       ]
     })
+    this.userUsageCount = this.loadUserUsageCount()
+    // 创建每天早上5点触发的定时任务
+    const rule = new schedule.RecurrenceRule()
+    rule.hour = 5
+    rule.minute = 0
+    const job = schedule.scheduleJob(rule, () => {
+      this.resetUserUsageCount() // 清空用户使用次数计数
+    })
   }
 
   async 单抽up (e) {
+    const userId = e.user_id
+
+    // 检查用户是否已经超过总次数限制
+    if (this.userUsageCount[userId] >= 100) {
+      e.reply('您已经超过了总次数限制。')
+      return
+    }
     try {
       const drawCountMap = loadDrawCountMap()
       const userId = e.user_id
@@ -58,12 +74,24 @@ export class up extends plugin {
           , { recallMsg: 10 })
         console.log(`单抽图片已保存至 ${outputFilePath}`)
       }
+      // 增加用户的计数器
+      this.userUsageCount[userId] = (this.userUsageCount[userId] || 0) + 1
+
+      // 保存用户使用次数计数到文件
+      this.saveUserUsageCount(this.userUsageCount)
     } catch (error) {
       console.error('发生错误：', error)
     }
   }
 
   async 十连up (e) {
+    const userId = e.user_id
+
+    // 检查用户是否已经超过总次数限制
+    if (this.userUsageCount[userId] >= 100) {
+      e.reply('您已经超过了总次数限制。')
+      return
+    }
     const positions = [
       [160, 0],
       [310, 0],
@@ -132,12 +160,45 @@ export class up extends plugin {
       } else {
         e.reply(`当前卡池：自由摇摆\n征集次数：${drawCountMap[userId].length} 次`, true, { recallMsg: 10 })
       }
+      // 增加用户的计数器
+      this.userUsageCount[userId] = (this.userUsageCount[userId] || 0) + 10
+
+      // 保存用户使用次数计数到文件
+      this.saveUserUsageCount(this.userUsageCount)
     } catch (error) {
       console.error('发生错误：', error)
     }
   }
-}
 
+  resetUserUsageCount () {
+    // 在每天早上5点触发的操作
+    // 清空用户使用次数计数
+    this.userUsageCount = {}
+    // 保存用户使用次数计数到文件
+    this.saveUserUsageCount(this.userUsageCount)
+  }
+
+  loadUserUsageCount () {
+    try {
+      const json = fs.readFileSync(countFilePath, 'utf-8')
+      return JSON.parse(json)
+    } catch (error) {
+      return {} // 如果文件不存在或解析错误，则返回一个空对象
+    }
+  }
+
+  saveUserUsageCount (userUsageCount) {
+    try {
+      const json = JSON.stringify(userUsageCount, null, 2)
+      fs.writeFileSync(countFilePath, json, 'utf-8')
+    } catch (error) {
+      console.error('保存用户使用次数计数文件失败:', error)
+    }
+  }
+}
+const countFilePath = `${process
+  .cwd()
+  .replace(/\\/g, '/')}/plugins/1999-plugin/db/模拟抽卡/count.json` // 加载用户使用次数计数
 function loadDrawCountMap () {
   try {
     const json = fs.readFileSync(dbFolderPath, 'utf-8')

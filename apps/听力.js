@@ -10,59 +10,59 @@ export class showI extends plugin {
       rule: [
         // 听力笔记
         {
-          reg: /^\/day1-1$/,
+          reg: /^(#|\/)?day1-1$/,
           fnc: 'T1'
         },
         {
-          reg: /^\/day1-2$/,
+          reg: /^(#|\/)?day1-2$/,
           fnc: 'T2'
         },
         {
-          reg: /^\/day1-3$/,
+          reg: /^(#|\/)?day1-3$/,
           fnc: 'T3'
         },
         {
-          reg: /^\/day2-1$/,
+          reg: /^(#|\/)?day2-1$/,
           fnc: 'T4'
         },
         {
-          reg: /^\/day2-2$/,
+          reg: /^(#|\/)?day2-2$/,
           fnc: 'T5'
         },
         {
-          reg: /^\/day2-3$/,
+          reg: /^(#|\/)?day2-3$/,
           fnc: 'T6'
         },
         {
-          reg: /^\/day3-1$/,
+          reg: /^(#|\/)?day3-1$/,
           fnc: 'T7'
         },
         {
-          reg: /^\/day3-2$/,
+          reg: /^(#|\/)?day3-2$/,
           fnc: 'T8'
         },
         {
-          reg: /^\/day4-1$/,
+          reg: /^(#|\/)?day4-1$/,
           fnc: 'T9'
         },
         {
-          reg: /^\/day4-2$/,
+          reg: /^(#|\/)?day4-2$/,
           fnc: 'T10'
         },
         {
-          reg: /^\/day4-3$/,
+          reg: /^(#|\/)?day4-3$/,
           fnc: 'T11'
         },
         {
-          reg: /^\/day4-4$/,
+          reg: /^(#|\/)?day4-4$/,
           fnc: 'T12'
         },
         {
-          reg: /^\/day5-1$/,
+          reg: /^(#|\/)?day5-1$/,
           fnc: 'T13'
         },
         {
-          reg: /^\/day5-2$/,
+          reg: /^(#|\/)?day5-2$/,
           fnc: 'T14'
         }
       ]

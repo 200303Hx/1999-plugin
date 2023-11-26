@@ -66,7 +66,7 @@ export class fenxichouka extends plugin {
     super({
       rule: [
         {
-          reg: /^\/征集记录\s+([\S]+)/,
+          reg: /^(#|\/)?征集记录\s+([\S]+)/,
           fnc: 'fenxi'
         }
       ]
@@ -75,7 +75,7 @@ export class fenxichouka extends plugin {
 
   async fenxi (e) {
     // 使用正则表达式匹配并提取链接的一部分
-    const urlRegex = /^\/征集记录\s+([\S]+)/
+    const urlRegex = /^(#|\/)?征集记录\s+([\S]+)/
     const match = e.msg.match(urlRegex)
 
     if (match && match[1]) {

@@ -8,7 +8,7 @@ export class fenxichouka1 extends plugin {
     super({
       rule: [
         {
-          reg: /^\/大保底概率$/,
+          reg: /^(#|\/)?大保底概率$/,
           fnc: 'fenxi1'
         }
       ]

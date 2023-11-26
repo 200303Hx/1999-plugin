@@ -66,7 +66,7 @@ export class fenxichouka extends plugin {
     super({
       rule: [
         {
-          reg: /^\/QQ征集记录\s+([\S]+)/,
+          reg: /^(#|\/)?QQ征集记录\s+([\S]+)/,
           fnc: 'fenxi'
         }
       ]
@@ -74,7 +74,7 @@ export class fenxichouka extends plugin {
   }
 
   async fenxi (e) {
-    const urlRegex = /^\/QQ征集记录\s+([\S]+)/
+    const urlRegex = /^(#|\/)?QQ征集记录\s+([\S]+)/
     const match = e.cmd_msg.match(urlRegex)
 
     if (match && match[1]) {

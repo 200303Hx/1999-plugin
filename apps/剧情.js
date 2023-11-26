@@ -10,11 +10,11 @@ export class showJ extends plugin {
       rule: [
         //听力笔记
         {
-          reg: /^\/TH.01-1$/,
+          reg: /^(#|\/)?TH.01-1$/,
           fnc: 'J1'
         },
         {
-          reg: /^\/TH.01-2$/,
+          reg: /^(#|\/)?TH.01-2$/,
           fnc: 'J2'
         }
       ]

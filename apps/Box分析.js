@@ -12,11 +12,11 @@ export class Box extends plugin {
       priority: 1,
       rule: [
         {
-          reg: /^\/配队(.*)/,
+          reg: /^(#|\/)?配队(.*)/,
           fnc: 'Box'
         },
         {
-          reg: /^百度TK\s+([\S]+)/,
+          reg: /^(#|\/)?百度TK\s+([\S]+)/,
           fnc: 'Box3'
         }
       ]
@@ -24,7 +24,7 @@ export class Box extends plugin {
   }
 
   async Box3 (e) {
-    const TK = /^百度TK\s+([\S]+)/
+    const TK = /^(#|\/)?百度TK\s+([\S]+)/
     const match = e.msg.match(TK)
     const partOfUrl = match[1]
     const yamlData = { partOfUrl }

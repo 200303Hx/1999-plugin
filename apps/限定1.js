@@ -13,11 +13,11 @@ export class up extends plugin {
       priority: 1,
       rule: [
         {
-          reg: /^\/十连up$/,
+          reg: /^(#|\/)?十连up$/,
           fnc: '十连up'
         },
         {
-          reg: /^\/单抽up$/,
+          reg: /^(#|\/)?单抽up$/,
           fnc: '单抽up'
         }
       ]

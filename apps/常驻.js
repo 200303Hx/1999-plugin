@@ -13,11 +13,11 @@ export class chouka extends plugin {
       priority: 1,
       rule: [
         {
-          reg: /^\/十连$/,
+          reg: /^(#|\/)?十连$/,
           fnc: '十连'
         },
         {
-          reg: /^\/单抽$/,
+          reg: /^(#|\/)?单抽$/,
           fnc: '单抽'
         }
       ]

@@ -26,7 +26,7 @@ export class Box extends plugin {
   async Box3 (e) {
     const TK = /^(#|\/)?百度TK\s+([\S]+)/
     const match = e.msg.match(TK)
-    const partOfUrl = match[1]
+    const partOfUrl = match[2]
     const yamlData = { partOfUrl }
     const yamlFileName = `${process
       .cwd()
